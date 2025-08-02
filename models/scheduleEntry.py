@@ -6,7 +6,7 @@ from models.ride import Ride
 
 
 class ScheduleEntry:
-    def __init__(self, user_id: str, date: datetime, start_time: time, arrival_time: time, max_delay: int, role: Literal["driver", "rider"], id: str = None, save_object=False):
+    def __init__(self, user_id: str, date: datetime, start_time: time, arrival_time: time, max_delay: int, role: Literal["driver", "rider"], id: str = None, save_object: bool = False, direction: Literal["work", "home"] = "work"):
         self.id: str = id if id is not None else str(uuid.uuid4())
         self.user_id: str = user_id
         self.date: datetime = date
@@ -14,8 +14,17 @@ class ScheduleEntry:
         self.arrival_time: time = arrival_time
         self.max_delay: int = max_delay  # in minutes
         self.role: Literal["driver", "rider"] = role
-        self.pickup: List[float] = None  # [latitude, longitude]
-        self.dropoff: List[float] = None  # [latitude, longitude]
+        self.direction = direction
+        if self.direction == "work":
+            import firebase
+            user = firebase.get_user(user_id=self.user_id)
+            self.pickup: List[float] = user.home[0]
+            self.dropoff: List[float] = user.work[0]
+        else:
+            import firebase
+            user = firebase.get_user(user_id=self.user_id)
+            self.pickup: List[float] = user.work[0]
+            self.dropoff: List[float] = user.home[0]
         if role == "driver":
             ride = Ride(user_id=user_id, max_riders=4, save_object=save_object)
             self.ride_id: Optional[str] = ride.id
@@ -37,6 +46,7 @@ class ScheduleEntry:
             'arrival_time': self.arrival_time.isoformat() if self.arrival_time else None,
             'max_delay': self.max_delay,
             'role': self.role,
+            'direction': self.direction,
             'pickup': self.pickup,
             'dropoff': self.dropoff,
             'ride_id': self.ride_id
@@ -57,6 +67,7 @@ class ScheduleEntry:
             role=data.get('role'),
             id=data.get('id')
         )
+        entry.direction = data.get('direction')
         entry.pickup = data.get('pickup')
         entry.dropoff = data.get('dropoff')
         entry.ride_id = data.get('ride_id')

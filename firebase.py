@@ -123,6 +123,12 @@ def get_rides_for_user(user_id):
     return [RidePassenger.from_dict(doc.to_dict()) for doc in docs]
 
 
+def get_schedule_for_user(user_id):
+    docs = db.collection('scheduleentrys').where(
+        'user_id', '==', user_id).stream()
+    return [ScheduleEntry.from_dict(doc.to_dict()) for doc in docs]
+
+
 def delete_all_collections():
     """Delete all documents in all main collections for cleanup/testing."""
     collections = ['users', 'rides',
