@@ -9,9 +9,9 @@ from io import BytesIO
 from datetime import datetime, time
 import uuid
 from geopy.distance import geodesic
+import config
 
-# Mapbox access token
-MAPBOX_TOKEN = 'pk.eyJ1IjoicGVuZGxhIiwiYSI6ImNtOXNuNjV2NjAyNjYyanM5M2Fjb24xYTAifQ.7RqcSLC1TxVWdeZMj8QkTw'
+MAPBOX_TOKEN = config.MAPBOX_ACCESS_TOKEN or ''
 
 # Initialize SQLite database
 def init_db():
