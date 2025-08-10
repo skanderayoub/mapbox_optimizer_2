@@ -1,11 +1,11 @@
 import requests
 from typing import List, Optional, Dict
 import logging
+import config
 
 MAPBOX_OPTIMIZATION_API_URL = "https://api.mapbox.com/optimized-trips/v1/mapbox/driving-traffic/"
 MAPBOX_DIRECTIONS_API_URL = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/"
-MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicGVuZGxhIiwiYSI6ImNtOXNuNjV2NjAyNjYyanM5M2Fjb24xYTAifQ.7RqcSLC1TxVWdeZMj8QkTw"
-
+MAPBOX_ACCESS_TOKEN = config.MAPBOX_ACCESS_TOKEN
 
 class MapboxOptimizer:
     def __init__(self, access_token: str = MAPBOX_ACCESS_TOKEN) -> None:
