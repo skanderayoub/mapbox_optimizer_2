@@ -4,12 +4,19 @@ from models.user import User
 from models.ride import Ride
 from models.scheduleEntry import ScheduleEntry
 from models.ridePassegenrs import RidePassenger
+import config
 
 # Initialize Firebase app and Firestore client
-cred = credentials.Certificate('firebase_service_account.json')
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+_creds = config.get_firebase_credentials()
+if isinstance(_creds, dict):
+    cred = credentials.Certificate(_creds)
+else:
+    cred = credentials.Certificate(_creds)
 
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 def save_object(obj, collection_name=None):
     """Save any model object to Firestore."""
