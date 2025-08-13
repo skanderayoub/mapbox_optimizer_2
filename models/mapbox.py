@@ -1,7 +1,7 @@
 import requests
 from typing import List, Optional, Dict
 import logging
-import config
+import core.config as config
 
 MAPBOX_OPTIMIZATION_API_URL = "https://api.mapbox.com/optimized-trips/v1/mapbox/driving-traffic/"
 MAPBOX_DIRECTIONS_API_URL = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/"

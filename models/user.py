@@ -13,8 +13,8 @@ class User:
         self.birthdate = None
         self.departement = None
         if save_object:
-            import firebase
-            firebase.save_object(self)
+            from repositories.base_repository import save_object
+            save_object(self)
 
     def generate_name(self):
         first_names = [

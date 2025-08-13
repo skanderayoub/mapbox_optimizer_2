@@ -16,13 +16,13 @@ class ScheduleEntry:
         self.role: Literal["driver", "rider"] = role
         self.direction = direction
         if self.direction == "work":
-            import firebase
-            user = firebase.get_user(user_id=self.user_id)
+            from repositories.users_repository import get_user
+            user = get_user(user_id=self.user_id)
             self.pickup: List[float] = user.home[0]
             self.dropoff: List[float] = user.work[0]
         else:
-            import firebase
-            user = firebase.get_user(user_id=self.user_id)
+            from repositories.users_repository import get_user
+            user = get_user(user_id=self.user_id)
             self.pickup: List[float] = user.work[0]
             self.dropoff: List[float] = user.home[0]
         if role == "driver":
@@ -33,8 +33,8 @@ class ScheduleEntry:
             self.ride_id: Optional[str] = None
             self.ride_obj = None
         if save_object:
-            import firebase
-            firebase.save_object(self)
+            from repositories.base_repository import save_object
+            save_object(self)
 
     def to_dict(self):
         """Serialize the ScheduleEntry object to a dictionary for Firestore."""
