@@ -9,7 +9,7 @@ from io import BytesIO
 from datetime import datetime, time
 import uuid
 from geopy.distance import geodesic
-import config
+import core.config as config
 
 MAPBOX_TOKEN = config.MAPBOX_ACCESS_TOKEN or ''
 

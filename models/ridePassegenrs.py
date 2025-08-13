@@ -9,8 +9,8 @@ class RidePassenger:
         self.status = status
         self.joined_at = joined_at
         if save_object:
-            import firebase
-            firebase.save_object(self)
+            from repositories.base_repository import save_object
+            save_object(self)
 
     def to_dict(self):
         return {

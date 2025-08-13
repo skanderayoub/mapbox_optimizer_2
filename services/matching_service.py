@@ -1,9 +1,10 @@
 from typing import List, Optional, Dict, Any
 from datetime import datetime, date
 from math import radians, sin, cos, asin, sqrt
-import firebase
 from models.scheduleEntry import ScheduleEntry
 from models.user import User
+from repositories.schedule_entries_repository import get_schedule_for_user, get_all_schedule_entries
+from repositories.users_repository import get_user
 
 def haversine_km(a: List[float], b: List[float]) -> float:
     lat1, lon1 = a
@@ -52,21 +53,21 @@ def _summary(entry: ScheduleEntry, user: User) -> Dict[str, Any]:
 
 class MatchingService:
     def drivers_for_rider(self, rider_id: str, on_date: Optional[date]):
-        rider_entries = [e for e in firebase.get_schedule_for_user(rider_id) if e.role == "rider"]
+        rider_entries = [e for e in get_schedule_for_user(rider_id) if e.role == "rider"]
         if on_date:
             rider_entries = [e for e in rider_entries if _same_day(on_date, e)]
         if not rider_entries:
             return {"rider_entry_id": None, "matches": []}
         rider_entry = rider_entries[0]
 
-        all_entries = firebase.get_all_schedule_entries()
+        all_entries = get_all_schedule_entries()
         drivers = [e for e in all_entries if e.role == "driver" and e.direction == rider_entry.direction]
         if on_date:
             drivers = [e for e in drivers if _same_day(on_date, e)]
 
         matches = []
         for d in drivers:
-            driver_user = firebase.get_user(d.user_id)
+            driver_user = get_user(d.user_id)
             if not driver_user:
                 continue
             matches.append({"score": score_match(d, rider_entry), "driver": _summary(d, driver_user)})
@@ -74,21 +75,21 @@ class MatchingService:
         return {"rider_entry_id": rider_entry.id, "matches": matches}
 
     def riders_for_driver(self, driver_id: str, on_date: Optional[date]):
-        driver_entries = [e for e in firebase.get_schedule_for_user(driver_id) if e.role == "driver"]
+        driver_entries = [e for e in get_schedule_for_user(driver_id) if e.role == "driver"]
         if on_date:
             driver_entries = [e for e in driver_entries if _same_day(on_date, e)]
         if not driver_entries:
             return {"driver_entry_id": None, "matches": []}
         driver_entry = driver_entries[0]
 
-        all_entries = firebase.get_all_schedule_entries()
+        all_entries = get_all_schedule_entries()
         riders = [e for e in all_entries if e.role == "rider" and e.direction == driver_entry.direction]
         if on_date:
             riders = [e for e in riders if _same_day(on_date, e)]
 
         matches = []
         for r in riders:
-            rider_user = firebase.get_user(r.user_id)
+            rider_user = get_user(r.user_id)
             if not rider_user:
                 continue
             matches.append({"score": score_match(driver_entry, r), "rider": _summary(r, rider_user)})

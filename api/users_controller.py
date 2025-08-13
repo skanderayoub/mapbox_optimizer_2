@@ -20,7 +20,7 @@ class UserUpdate(UserCreate):
 
 @router.post("", summary="Create user")
 def create_user(payload: UserCreate):
-    user = user_service.create(payload.dict(exclude_unset=True))
+    user = user_service.create(payload.model_dump(exclude_unset=True))
     return user.to_dict()
 
 @router.get("/{user_id}", summary="Get user")
@@ -33,7 +33,7 @@ def get_user(user_id: str):
 @router.patch("/{user_id}", summary="Update user")
 def update_user(user_id: str, payload: UserUpdate):
     try:
-        user = user_service.update(user_id, payload.dict(exclude_unset=True))
+        user = user_service.update(user_id, payload.model_dump(exclude_unset=True))
         return user.to_dict()
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))

@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
-from controllers.users_controller import router as users_router
-from controllers.matching_controller import router as matching_router
+from api.users_controller import router as users_router
+from api.matching_controller import router as matching_router
 
 tags_metadata = [
     {"name": "users", "description": "Create, read, update users"},

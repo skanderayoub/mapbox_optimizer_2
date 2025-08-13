@@ -14,8 +14,8 @@ class Ride:
         self.actual_detour = None
         self.route: List[float] = None
         if save_object:
-            import firebase
-            firebase.save_object(self)
+            from repositories.base_repository import save_object
+            save_object(self)
 
     def to_dict(self):
         return {
