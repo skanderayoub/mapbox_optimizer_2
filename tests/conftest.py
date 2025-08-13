@@ -83,7 +83,7 @@ def patch_repositories_db(fake_db, monkeypatch):
 
 
 @pytest.fixture()
-def app_with_fake_db(fake_db, monkeypatch):
+def app_with_fake_db(fake_db, monkeypatch, patch_repositories_db):
     # Provide a fake core.firebase before importing app and repositories
     fake_core_firebase = types.ModuleType("core.firebase")
     fake_core_firebase.db = fake_db
